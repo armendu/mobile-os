@@ -3,6 +3,7 @@ package com.example.e04_01.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.Button;
 
 import com.example.e04_01.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,7 +21,10 @@ public class LoginActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        Button loginButton = findViewById(R.id.login_button);
+        loginButton.setOnClickListener(view -> {
 
+        });
     }
 
     @Override
