@@ -3,6 +3,7 @@ package com.example.e04_01.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -35,12 +36,16 @@ public class LoginActivity extends AppCompatActivity {
         TextInputEditText passwordTextView = findViewById(R.id.password);
         Button loginButton = findViewById(R.id.login_button);
 
-
+        TextView register = findViewById(R.id.register_text);
+        register.setOnClickListener(view -> {
+            Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(registerIntent);
+        });
 
         loginButton.setOnClickListener(view -> {
             String username = usernameTextView.getText().toString();
             String password = passwordTextView.getText().toString();
-//            mAuth.signInWithEmailAndPassword()
+
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please provide values", Toast.LENGTH_LONG).show();
                 return;
@@ -54,7 +59,10 @@ public class LoginActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-//                                updateUI(user);
+
+                                Intent loginIntent = new Intent(LoginActivity.this, EmployeeActivity.class);
+                                startActivity(loginIntent);
+                                finish();
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -73,7 +81,6 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-
             // TODO: Start Content Activity
         }
     }
