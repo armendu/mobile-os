@@ -10,6 +10,14 @@ public class EmployeeViewModels {
     private Gender gender;
     private Role role;
 
+    public EmployeeViewModels(String name, String biography, String imageUrl, Gender gender, Role role) {
+        this.name = name;
+        this.biography = biography;
+        this.imageUrl = imageUrl;
+        this.gender = gender;
+        this.role = role;
+    }
+
     public String getName() {
         return name;
     }

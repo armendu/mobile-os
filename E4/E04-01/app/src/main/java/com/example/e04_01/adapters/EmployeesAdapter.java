@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeesAdapter extends RecyclerView.Adapter<EmployeeViewHolder> {
-    private List<EmployeeViewModels> employeeViewModels = new ArrayList<>();
+    private final List<EmployeeViewModels> employeeViewModels = new ArrayList<>();
 
     public void setData(List<EmployeeViewModels> employeeData) {
         this.employeeViewModels.clear();

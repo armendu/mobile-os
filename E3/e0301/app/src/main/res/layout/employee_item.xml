@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="23sp"
+        android:id="@+id/employee_name"
+        android:text="Sample Name"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/employee_name"
+        android:textSize="23sp"
+        android:id="@+id/employee_gender"
+        android:layout_marginLeft="2dp"
+        android:text="Sample Gender"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="15sp"
+        android:layout_margin="5dp"
+        android:id="@+id/employee_role"
+        android:text="Sample Role"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/employee_name"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="10sp"
+        android:id="@+id/employee_description"
+        android:text="Sample Description"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
