@@ -3,7 +3,7 @@ package com.example.e04_01.viewmodels;
 import com.example.e04_01.enums.Gender;
 import com.example.e04_01.enums.Role;
 
-public class Employee {
+public class EmployeeViewModels {
     private String name;
     private String biography;
     private String imageUrl;

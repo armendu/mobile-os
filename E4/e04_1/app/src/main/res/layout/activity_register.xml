@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.RegisterActivity">
+    tools:context=".RegisterActivity">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/login_title"
+        android:id="@+id/our_app_title"
         style="@style/TextAppearance.AppCompat.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="@string/app_name"
+        android:layout_margin="@dimen/default_login_margin"
+        android:text="@string/our_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -24,16 +24,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_login_margin"
-        android:hint="@string/username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_title">
+        app:layout_constraintTop_toBottomOf="@+id/our_app_title">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/register_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="armendd.u@hotmail.com"/>
+            android:layout_height="match_parent"
+            android:hint="@string/enter_your_email"
+            android:text="armend.ukehaxhaj@riinvest.net">
+
+        </com.google.android.material.textfield.TextInputEditText>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -42,20 +44,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_login_margin"
-        android:hint="@string/password"
-        app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username_wrapper"
-        app:errorEnabled="true">
+        app:layout_constraintTop_toBottomOf="@+id/username_wrapper">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/register_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:hint="@string/enter_your_password"
             android:inputType="textPassword"
-            android:text="riinvest"
-            app:errorContentDescription="test"/>
+            android:text="riinvest">
+
+        </com.google.android.material.textfield.TextInputEditText>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -67,8 +68,6 @@
         android:text="@string/register"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/password_wrapper">
-
-    </com.google.android.material.button.MaterialButton>
+        app:layout_constraintTop_toBottomOf="@+id/password_wrapper" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

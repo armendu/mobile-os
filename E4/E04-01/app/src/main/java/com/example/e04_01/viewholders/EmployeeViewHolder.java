@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.e04_01.R;
-import com.example.e04_01.viewmodels.Employee;
+import com.example.e04_01.viewmodels.EmployeeViewModels;
 
 public class EmployeeViewHolder extends RecyclerView.ViewHolder {
 
@@ -25,11 +25,11 @@ public class EmployeeViewHolder extends RecyclerView.ViewHolder {
         employeeGenderView = itemView.findViewById(R.id.item_employee_gender);
     }
 
-    public void bindData(Employee employee) {
-        employeeNameView.setText(employee.getName());
-        employeeRoleView.setText(employee.getRole().toString());
-        employeeBioView.setText(employee.getBiography());
-        employeeGenderView.setText(employee.getGender().getDescription());
+    public void bindData(EmployeeViewModels employeeViewModels) {
+        employeeNameView.setText(employeeViewModels.getName());
+        employeeRoleView.setText(employeeViewModels.getRole().toString());
+        employeeBioView.setText(employeeViewModels.getBiography());
+        employeeGenderView.setText(employeeViewModels.getGender().getDescription());
     }
 
 }

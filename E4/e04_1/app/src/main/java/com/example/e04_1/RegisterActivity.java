@@ -1,4 +1,4 @@
-package com.example.e04_01.activities;
+package com.example.e04_1;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.e04_01.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -49,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Log.d(TAG, "createUserWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
 
-                                Intent contentIntent = new Intent(RegisterActivity.this, EmployeeActivity.class);
+                                Intent contentIntent = new Intent(RegisterActivity.this, ContentActivity.class);
                                 startActivity(contentIntent);
                                 finish();
                             } else {

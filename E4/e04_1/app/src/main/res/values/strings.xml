@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">E04-1</string>
+    <string name="content_activity">Content Activity</string>
+    <string name="our_app">Our App</string>
+    <string name="enter_your_email">Email</string>
+    <string name="enter_your_password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="don_t_have_an_account_register">Don\'t have an account? Register</string>
+</resources>
