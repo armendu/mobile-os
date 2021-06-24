@@ -2,9 +2,11 @@ package com.example.e05_01.data;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -25,11 +27,32 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context,
-                            AppDatabase.class, "database-name").build();
+                            AppDatabase.class, "database-name").addCallback(sRoomDatabaseCallback).build();
                 }
             }
         }
 
         return INSTANCE;
     }
+
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+
+            // If you want to keep data through app restarts,
+            // comment out the following block
+//            databaseWriteExecutor.execute(() -> {
+//                // Populate the database in the background.
+//                // If you want to start with more words, just add them.
+//                UserDao dao = INSTANCE.userDao();
+//                dao.delete();
+//
+//                Word word = new Word("Hello");
+//                dao.insert(word);
+//                word = new Word("World");
+//                dao.insert(word);
+//            });
+        }
+    };
 }

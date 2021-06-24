@@ -1,5 +1,6 @@
 package com.example.e05_01.data;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -12,13 +13,13 @@ import java.util.List;
 public interface UserDao {
 
     @Query("SELECT * FROM users")
-    List<User> getAll();
+    LiveData<List<User>> getAll();
 
     @Query("SELECT * FROM users WHERE id=:userId")
-    User getById(int userId);
+    LiveData<User> getById(int userId);
 
     @Query("SELECT * FROM users WHERE first_name LIKE :name")
-    User findByName(String name);
+    LiveData<User> findByName(String name);
 
     @Insert
     void insert(User... user);
