@@ -29,13 +29,18 @@ public class MainActivity extends AppCompatActivity {
         // the ViewModel persists.
         mWordViewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
+        User user1 = new User();
+        user1.setName("Armend");
+        user1.setLastName("Lastname");
+        user1.setPosition("position");
+
+        mWordViewModel.insert(user1);
+
         mWordViewModel.getAllWords().observe(this, users -> {
             // Update the cached copy of the words in the adapter.
             for (User user : users) {
-                Log.d("TAG", user.getName());
+                Log.d("MainActivity", user.getName());
             }
         });
-
-
     }
 }

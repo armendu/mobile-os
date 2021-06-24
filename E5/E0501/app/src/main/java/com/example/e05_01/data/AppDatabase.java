@@ -42,17 +42,17 @@ public abstract class AppDatabase extends RoomDatabase {
 
             // If you want to keep data through app restarts,
             // comment out the following block
-//            databaseWriteExecutor.execute(() -> {
-//                // Populate the database in the background.
-//                // If you want to start with more words, just add them.
-//                UserDao dao = INSTANCE.userDao();
+            databaseWriteExecutor.execute(() -> {
+                // Populate the database in the background.
+                // If you want to start with more words, just add them.
+                UserDao dao = INSTANCE.userDao();
 //                dao.delete();
-//
-//                Word word = new Word("Hello");
-//                dao.insert(word);
-//                word = new Word("World");
-//                dao.insert(word);
-//            });
+
+                User word = new User();
+                word.setLastName("testing");
+                word.setName("testingName");
+                dao.insert(word);
+            });
         }
     };
 }
