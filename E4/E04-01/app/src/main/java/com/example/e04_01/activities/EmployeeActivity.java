@@ -1,21 +1,18 @@
 package com.example.e04_01.activities;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
-import android.util.Log;
-
 import com.example.e04_01.R;
 import com.example.e04_01.adapters.EmployeesAdapter;
-import com.example.e04_01.data.Employee;
 import com.example.e04_01.enums.Gender;
 import com.example.e04_01.enums.Role;
-import com.example.e04_01.viewmodels.EmployeeViewModels;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.e04_01.viewmodels.EmployeeViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,12 +28,16 @@ public class EmployeeActivity extends AppCompatActivity {
     private String TAG = "EmployeeActivity";
     private FirebaseDatabase mDatabase;
 
-    private List<EmployeeViewModels> employeeList = new ArrayList<EmployeeViewModels>();
+    private List<EmployeeViewModel> employeeList = new ArrayList<EmployeeViewModel>();
+    private FirebaseDatabase firebaseDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee);
+
+        firebaseDatabase = FirebaseDatabase.getInstance("https://example04-360e1-default-rtdb.europe-west1.firebasedatabase.app/");
+        DatabaseReference ref = firebaseDatabase.getReference("users");
 
         EmployeesAdapter employeesAdapter = new EmployeesAdapter();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -46,51 +47,32 @@ public class EmployeeActivity extends AppCompatActivity {
 
         employeesAdapter.setData(employeeList);
 
-        mDatabase = FirebaseDatabase.getInstance("https://example04-360e1-default-rtdb.europe-west1.firebasedatabase.app/");
-        DatabaseReference myRef = mDatabase.getReference("users");
+        FloatingActionButton fab = findViewById(R.id.floating_action_button);
+        fab.setOnClickListener(view -> {
+            EmployeeViewModel firstEmployee = new
+                    EmployeeViewModel("Armend", "Riinvest1", "", Gender.Male, Role.Technology);
 
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
+            String key = ref.push().getKey(); // produces: "-McVBXTtwELzvmnDLwIm" : {}
+            ref.child(key).setValue(firstEmployee); // {}
+        });
+
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                    Log.v(TAG,""+ childDataSnapshot.getKey()); //displays the key for the node
-                    Employee employee = childDataSnapshot.getValue(Employee.class);
-                    Log.v(TAG,"email: "+ employee.email);   //gives the value for given keyname
-                    Log.v(TAG,"username: "+ employee.username);   //gives the value for given keyname
-                    // EmployeeList is not cleared
-                    employeeList.add(new EmployeeViewModels(employee.username, employee.email, employee.email, Gender.Female, Role.Technology));
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                employeeList.clear();
+                for (DataSnapshot childData : snapshot.getChildren()) {
+                    Log.d(TAG, "Child data has value: " + String.valueOf(childData));
+                    EmployeeViewModel evm = childData.getValue(EmployeeViewModel.class);
+                    employeeList.add(evm);
                 }
+
                 employeesAdapter.setData(employeeList);
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d(TAG, "Error: " + error);
             }
         });
-
-        FloatingActionButton fab = findViewById(R.id.floating_action_button);
-        fab.setOnClickListener(view -> {
-//            String key = mDatabase.getReference("users").getKey();
-
-            myRef.push().setValue(new Employee("armend", "email"));
-        });
-
-//        mDatabase.getReference("users"). get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    Log.d("firebase", String.valueOf(task.getResult(Employee.class));
-//                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
-//                }
-//            }
-//        });
     }
 }

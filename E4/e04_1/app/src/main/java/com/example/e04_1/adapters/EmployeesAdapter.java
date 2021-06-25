@@ -1,4 +1,4 @@
-package com.example.e04_01.adapters;
+package com.example.e04_1.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.e04_01.R;
-import com.example.e04_01.viewholders.EmployeeViewHolder;
-import com.example.e04_01.viewmodels.EmployeeViewModel;
+import com.example.e04_1.R;
+import com.example.e04_1.viewholders.EmployeeViewHolder;
+import com.example.e04_1.viewmodels.EmployeeViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

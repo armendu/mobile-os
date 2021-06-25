@@ -1,16 +1,16 @@
-package com.example.e04_01.viewmodels;
+package com.example.e04_1.viewmodels;
 
-import com.example.e04_01.enums.Gender;
-import com.example.e04_01.enums.Role;
+import com.example.e04_1.enums.Gender;
+import com.example.e04_1.enums.Role;
 
-public class EmployeeViewModels {
+public class EmployeeViewModel {
     private String name;
     private String biography;
     private String imageUrl;
     private Gender gender;
     private Role role;
 
-    public EmployeeViewModels(String name, String biography, String imageUrl, Gender gender, Role role) {
+    public EmployeeViewModel(String name, String biography, String imageUrl, Gender gender, Role role) {
         this.name = name;
         this.biography = biography;
         this.imageUrl = imageUrl;
