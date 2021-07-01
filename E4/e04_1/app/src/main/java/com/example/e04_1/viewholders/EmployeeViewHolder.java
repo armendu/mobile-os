@@ -1,4 +1,4 @@
-package com.example.e04_01.viewholders;
+package com.example.e04_1.viewholders;
 
 import android.view.View;
 import android.widget.TextView;
@@ -6,8 +6,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.e04_01.R;
-import com.example.e04_01.viewmodels.EmployeeViewModel;
+import com.example.e04_1.R;
+import com.example.e04_1.viewmodels.EmployeeViewModel;
 
 public class EmployeeViewHolder extends RecyclerView.ViewHolder {
 
