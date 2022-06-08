@@ -7,7 +7,13 @@ import com.example.e08_fragmentexample.ListViewHolder
 import com.example.e08_fragmentexample.R
 
 class RecyclerAdapter : RecyclerView.Adapter<ListViewHolder>() {
-    val listOfStudents = arrayOf("Student1", "Student2", "Student3")
+    var listOfStudents = ArrayList<String>()
+
+    fun setList(students: List<String>) {
+        listOfStudents.clear()
+        listOfStudents.addAll(students)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val view = LayoutInflater.from(parent.context)

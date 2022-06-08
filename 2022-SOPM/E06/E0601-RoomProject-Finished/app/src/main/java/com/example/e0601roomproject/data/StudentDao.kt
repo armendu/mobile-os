@@ -16,8 +16,8 @@ interface StudentDao {
     fun getStudent(id: Int) : Flow<Student>
 
     @Insert
-    suspend fun insertStudent(student: Student)
+    fun insertStudent(student: Student)
 
     @Delete
-    suspend fun deleteStudent(student: Student)
+    fun deleteStudent(student: Student)
 }

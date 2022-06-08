@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
 @Database(entities = [Student::class], version = 1)
@@ -14,14 +16,11 @@ abstract class StudentDatabase: RoomDatabase() {
     companion object {
         private var INSTANCE: StudentDatabase? = null
 
-        private val noOfThreads = 4;
-        val databaseExecuter = Executors.newFixedThreadPool(noOfThreads)
-
-        fun getDatabase(context: Context) : StudentDatabase {
+        fun getDatabase(context: Context, scope: CoroutineScope) : StudentDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room
                     .databaseBuilder(context, StudentDatabase::class.java, "student_database")
-                    .addCallback(databaseCallback)
+                    .addCallback(StudentDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
 
@@ -29,13 +28,26 @@ abstract class StudentDatabase: RoomDatabase() {
             }
         }
 
-        private val databaseCallback: Callback = object : Callback() {
+//        private val databaseCallback: Callback = object : Callback() {
+//            override fun onCreate(db: SupportSQLiteDatabase) {
+//                super.onCreate(db)
+//                databaseExecuter.execute {
+//                    val studentDao = INSTANCE?.getStudentDao()
+//                    val studentToAdd = Student(1, "test", "testSurname", "")
+//                    studentDao?.insertStudent(studentToAdd)
+//                }
+//            }
+//        }
+
+        private class StudentDatabaseCallback(val scope: CoroutineScope) : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                databaseExecuter.execute {
-                    val studentDao = INSTANCE?.getStudentDao()
-                    val studentToAdd = Student(1, "test", "testSurname", "")
-                    studentDao?.insertStudent(studentToAdd)
+                INSTANCE?.let {
+                    scope.launch {
+                        val studentDao = INSTANCE?.getStudentDao()
+                        val studentToAdd = Student(1, "test", "testSurname", "")
+                        studentDao?.insertStudent(studentToAdd)
+                    }
                 }
             }
         }

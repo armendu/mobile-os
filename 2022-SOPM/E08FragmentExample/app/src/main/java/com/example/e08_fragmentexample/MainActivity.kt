@@ -13,6 +13,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class MainActivity : AppCompatActivity() {
     val listDataManager = StudentDataManager(this)
     lateinit var recyclerView: RecyclerView
+    val adapter = RecyclerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,15 +23,18 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         // Setup the adapter
-        recyclerView.adapter = RecyclerAdapter()
+        recyclerView.adapter = adapter
 
+        val studentViewModel = StudentViewModel(listDataManager)
+
+        studentViewModel.students.let { students -> students.let { adapter.setList(it) }  }
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
-            showCreateListDialog()
+            showCreateListDialog(studentViewModel)
         }
     }
 
-    private fun showCreateListDialog() {
+    private fun showCreateListDialog(studentViewModel: StudentViewModel) {
         val builder = AlertDialog.Builder(this)
         val nameEditText = EditText(this)
         nameEditText.inputType = InputType.TYPE_CLASS_TEXT
@@ -41,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         builder.setView(nameEditText)
 
         builder.setPositiveButton("Confirm") { dialog, i ->
+            studentViewModel.insertToList(nameEditText.text.toString())
+            studentViewModel.students.let { students -> students.let { adapter.setList(it) }  }
             dialog.dismiss()
         }
 
