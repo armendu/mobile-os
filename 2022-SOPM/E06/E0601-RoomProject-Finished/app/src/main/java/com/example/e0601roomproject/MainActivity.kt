@@ -1,17 +1,16 @@
 package com.example.e0601roomproject
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.e0601roomproject.adapters.StudentAdapter
+import com.example.e0601roomproject.adapters.StudentListAdapter
 import com.example.e0601roomproject.data.*
 import com.example.e0601roomproject.services.TypicodeService
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,13 +20,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val applicationScope = CoroutineScope(SupervisorJob())
-
-        val db = StudentDatabase.getDatabase(this, applicationScope)
+        val db = StudentDatabase.getDatabase(this)
         val service = TypicodeService.create()
-        val studentRepository = StudentRepository(db.getStudentDao(), service)
+        val repo = StudentRepository(db.getStudentDao(), service)
 
-        studentRepository.getTodo(1).enqueue(object: Callback<Todo> {
+        repo.getTodo(1).enqueue(object: Callback<Todo> {
             override fun onResponse(call: Call<Todo>, response: Response<Todo>) {
                 if (response.isSuccessful){
                     Log.d("MainActivity", "Response: ${response.body()}")
@@ -39,21 +36,20 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-        val studentAdapter = StudentAdapter()
-
-        recyclerView.adapter = studentAdapter
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
+        val adapter = StudentListAdapter()
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val studentViewModel = StudentViewModel(studentRepository)
-
+        val studentViewModel = StudentViewModel(repo)
         studentViewModel.students.observe(this) { students ->
-            students.let { student -> studentAdapter.submitList(student) }
+            // Update the cached copy of the words in the adapter.
+            students?.let { adapter.submitList(it) }
         }
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
-            val student = Student(3, "Armend1", "Ukehaxhaj", "Test")
+            val student = Student(2, "test123", "test123", "test123")
             studentViewModel.insert(student)
         }
     }

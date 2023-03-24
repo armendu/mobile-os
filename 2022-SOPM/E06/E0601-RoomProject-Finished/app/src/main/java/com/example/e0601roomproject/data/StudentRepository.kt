@@ -13,7 +13,7 @@ class StudentRepository(private val studentDao: StudentDao, private val typicode
     }
 
     @WorkerThread
-    suspend fun insertStudent(student: Student) {
+    fun insertStudent(student: Student) {
         studentDao.insertStudent(student)
     }
 }

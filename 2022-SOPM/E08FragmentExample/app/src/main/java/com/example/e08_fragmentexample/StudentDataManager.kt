@@ -4,17 +4,17 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 
-class StudentDataManager(val context: Context) {
+class StudentDataManager(private val context: Context) {
     fun saveList(studentName: String) {
         val editor: SharedPreferences = context.getSharedPreferences("SHARED_PREF", 0)
         editor.edit(commit = true) { putString(studentName, studentName) }
     }
 
-    fun readList(): ArrayList<String> {
+    fun readList(): List<String> {
         val sharedPreferences = context.getSharedPreferences("SHARED_PREF", 0)
         val sharedPreferencesContents = sharedPreferences.all
 
-        var arrayOfName = ArrayList<String>()
+        val arrayOfName = ArrayList<String>()
         for (content in sharedPreferencesContents) {
             arrayOfName.add(content.key)
         }
