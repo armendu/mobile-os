@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">E08-FragmentExample</string>
+    <string name="dialog_title">Add a new student</string>
+</resources>
