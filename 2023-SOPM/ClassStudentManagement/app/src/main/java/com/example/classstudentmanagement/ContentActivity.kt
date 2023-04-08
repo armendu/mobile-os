@@ -2,7 +2,11 @@ package com.example.classstudentmanagement
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
+import androidx.recyclerview.widget.RecyclerView
+import com.example.classstudentmanagement.adapters.CoursesAdapter
+import com.example.classstudentmanagement.data.DataSource
 
 class ContentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,8 +16,10 @@ class ContentActivity : AppCompatActivity() {
         val mainActivityIntent = intent
 
         val username = mainActivityIntent.getStringExtra("USERNAME")
-        val contentButton = findViewById<Button>(R.id.content_button)
+        Log.d("ContentActivity", "Username is ${username.toString()}")
 
-        contentButton.text = username.toString()
+        val coursesList = DataSource().getCourses()
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView.adapter = CoursesAdapter(coursesList)
     }
 }
