@@ -2,12 +2,17 @@ package com.example.classstudentmanagement
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classstudentmanagement.adapters.CoursesAdapter
+import com.example.classstudentmanagement.application.ClassStudentManagementApplication
 import com.example.classstudentmanagement.data.DataSource
 import com.example.classstudentmanagement.models.Course
 import com.example.classstudentmanagement.services.ApiService
+import com.example.classstudentmanagement.viewmodels.StudentViewModel
+import com.example.classstudentmanagement.viewmodels.StudentViewModelFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,6 +22,10 @@ class ContentActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "ContentActivity"
+    }
+
+    private val studentViewModel: StudentViewModel by viewModels {
+        StudentViewModelFactory((application as ClassStudentManagementApplication).repository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +39,12 @@ class ContentActivity : AppCompatActivity() {
 
         val coursesList = DataSource().getCourses()
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+
+        studentViewModel.students.observe(this, Observer {
+            students -> students.let {
+                Log.d(TAG, "STUDENT Name $it")
+        }
+        })
 
         val service = ApiService.getService().getCourses()
 
