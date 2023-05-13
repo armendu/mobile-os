@@ -46,7 +46,6 @@ abstract class UniversityDatabase : RoomDatabase() {
                             "Surname1",
                             "2000-04-05"
                         )
-
                     )
                 }
             }

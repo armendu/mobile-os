@@ -7,12 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.classstudentmanagement.adapters.CoursesAdapter
+import com.example.classstudentmanagement.adapters.StudentAdapter
 import com.example.classstudentmanagement.application.ClassStudentManagementApplication
 import com.example.classstudentmanagement.data.DataSource
 import com.example.classstudentmanagement.models.Course
+import com.example.classstudentmanagement.models.Student
 import com.example.classstudentmanagement.services.ApiService
 import com.example.classstudentmanagement.viewmodels.StudentViewModel
 import com.example.classstudentmanagement.viewmodels.StudentViewModelFactory
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,15 +40,39 @@ class ContentActivity : AppCompatActivity() {
         val username = mainActivityIntent.getStringExtra("USERNAME")
         Log.d("ContentActivity", "Username is ${username.toString()}")
 
-        val coursesList = DataSource().getCourses()
+        // val coursesList = DataSource().getCourses()
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
+        val studentAdapter = StudentAdapter()
+        recyclerView.adapter = studentAdapter
 
-        studentViewModel.students.observe(this, Observer {
-            students -> students.let {
+        studentViewModel.students.observe(this, Observer { students ->
+            students.let {
+                studentAdapter.submitList(students)
                 Log.d(TAG, "STUDENT Name $it")
-        }
+            }
         })
 
+        var latestId = 5
+
+        // FAB onClick to add to DB
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener {
+            latestId += 1
+            val studentToAdd =
+                Student(
+                    latestId,
+                    "Name$latestId",
+                    "surname$latestId",
+                    ""
+                )
+            studentViewModel.insert(studentToAdd)
+        }
+
+        callServiceToGetCoursesData(recyclerView)
+    }
+
+    private fun callServiceToGetCoursesData(recyclerView: RecyclerView) {
+        // Calling a Service to get Courses Data
         val service = ApiService.getService().getCourses()
 
         service.enqueue(object : Callback<List<Course>> {

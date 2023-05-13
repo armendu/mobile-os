@@ -7,9 +7,13 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-    val TAG = "MainActivity"
+    companion object {
+        const val TAG = "MainActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -26,8 +30,9 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val intent = Intent(this, ContentActivity::class.java)
-            intent.putExtra("USERNAME", username.text.toString())
+//            val intent = Intent(this, ContentActivity::class.java)
+//            intent.putExtra("USERNAME", username.text.toString())
+            val intent = Intent(this, RatingsActivity::class.java)
             startActivity(intent)
             finish()
         }
