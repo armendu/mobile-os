@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.classstudentmanagement.adapters.CoursesAdapter
 import com.example.classstudentmanagement.adapters.StudentAdapter
 import com.example.classstudentmanagement.application.ClassStudentManagementApplication
-import com.example.classstudentmanagement.data.DataSource
 import com.example.classstudentmanagement.models.Course
 import com.example.classstudentmanagement.models.Student
 import com.example.classstudentmanagement.services.ApiService
@@ -19,7 +18,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
 
 class ContentActivity : AppCompatActivity() {
 

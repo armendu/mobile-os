@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         showLongToastWithMessage("Logged in successfully. Hello ${auth.currentUser?.email}")
-                        val intent = Intent(this, RatingsActivity::class.java)
+                        val intent = Intent(this, PublishActivity::class.java)
                         intent.putExtra("USERNAME", email.text.toString())
                         startActivity(intent)
                         finish()
@@ -87,8 +87,12 @@ class LoginActivity : AppCompatActivity() {
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            Log.d(TAG, "onStart: Current user is: ${currentUser.displayName}")
-            // reload()
+            Log.d(TAG, "onStart: Current user is: ${currentUser.email}")
+            showLongToastWithMessage("Logged in successfully. Hello ${currentUser.email}")
+            val intent = Intent(this, PublishActivity::class.java)
+            intent.putExtra("ID", currentUser.uid.toString())
+            startActivity(intent)
+            finish()
         } else {
             Log.d(TAG, "onStart: User is not logged in")
         }

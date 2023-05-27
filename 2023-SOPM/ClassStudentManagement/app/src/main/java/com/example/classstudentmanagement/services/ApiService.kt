@@ -12,7 +12,7 @@ interface ApiService {
 
     companion object {
 
-        private const val BASE_URL = "http://10.0.2.2:5125"
+        private const val BASE_URL = "http://10.0.2.2:5125" // TODO: Quite important
 
         fun getService() : ApiService {
             val retrofit = Retrofit.Builder()
