@@ -39,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         showLongToastWithMessage("Logged in successfully. Hello ${auth.currentUser?.email}")
-                        val intent = Intent(this, PublishActivity::class.java)
+                        val intent = Intent(this, PostsActivity::class.java)
                         intent.putExtra("USERNAME", email.text.toString())
                         startActivity(intent)
                         finish()
@@ -89,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
         if (currentUser != null) {
             Log.d(TAG, "onStart: Current user is: ${currentUser.email}")
             showLongToastWithMessage("Logged in successfully. Hello ${currentUser.email}")
-            val intent = Intent(this, PublishActivity::class.java)
+            val intent = Intent(this, PostsActivity::class.java)
             intent.putExtra("ID", currentUser.uid.toString())
             startActivity(intent)
             finish()

@@ -1,15 +1,21 @@
 package com.example.classstudentmanagement
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.classstudentmanagement.models.Course
 import com.example.classstudentmanagement.models.Student
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import java.io.File
@@ -21,6 +27,11 @@ class PublishActivity : AppCompatActivity() {
     companion object {
         const val TAG = "PublishActivity"
     }
+
+    // Reference to Storage
+    private val storage = Firebase.storage
+    // Create a storage reference from our app
+    private val storageRef = storage.reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +45,8 @@ class PublishActivity : AppCompatActivity() {
         val surname = findViewById<EditText>(R.id.surname)
         val addButton = findViewById<Button>(R.id.add_button)
         val addUserInfo = findViewById<Button>(R.id.add_user_info)
-        val addImageButton = findViewById<Button>(R.id.add_image)
         val downloadImageButton = findViewById<Button>(R.id.download_image)
+        val uploadImageButton = findViewById<Button>(R.id.upload_image)
 
         // Get database
         val database = Firebase.database
@@ -45,15 +56,6 @@ class PublishActivity : AppCompatActivity() {
 
         // Users Reference
         val usersReference = database.getReference("users")
-
-        // Reference to Storage
-        val storage = Firebase.storage
-        // Create a storage reference from our app
-        var storageRef = storage.reference
-        // Create a child reference
-        // imagesRef now points to "images"
-        var imagesRef: StorageReference? = storageRef.child("images")
-
 
         usersReference.child(userId!!).get().addOnSuccessListener {
             Log.i("PublishActivity", "Got value ${it.value}")
@@ -72,37 +74,36 @@ class PublishActivity : AppCompatActivity() {
             usersReference.child(userId).setValue(student)
         }
 
-        addImageButton.setOnClickListener {
-            val stream = FileInputStream(File("/Users/armend/Documents/Workspace/AndroidWorkspace/mobile-os/2023-SOPM/ClassStudentManagement/app/src/main/res/drawable/riinvest.png"))
+        downloadImageButton.setOnClickListener {
+            storageRef.child("image:17").downloadUrl.addOnSuccessListener { uri ->
+                // Local temp file has been created
+                Log.d(TAG, "Download URL for that file is: $uri")
 
-            val uploadTask = imagesRef!!.putStream(stream)
-            uploadTask.addOnFailureListener {
-                Log.d(TAG, "File failed to upload")
-                // Handle unsuccessful uploads
-            }.addOnSuccessListener { taskSnapshot ->
-                // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                // ...
-                Log.d(TAG, "File uploaded successfully")
+                val imageView = findViewById<ImageView>(R.id.image_view)
+                Glide.with(this)
+                    .load(uri)
+                    .into(imageView)
+            }.addOnFailureListener { exception ->
+                // Handle any errors
+                Log.d(TAG, "Download URL for that file FAILED: ${exception.message}")
             }
         }
 
-        downloadImageButton.setOnClickListener {
-            val ourImage = storageRef.child("Android-App-Approaches.drawio.png")
-
-            val localFile = File.createTempFile("images", "jpg")
-
-            ourImage.getFile(localFile).addOnSuccessListener {
-                // Local temp file has been created
-                Log.d(TAG, "File has been download")
-            }.addOnFailureListener {
-                // Handle any errors
-            }
+        uploadImageButton.setOnClickListener {
+            getContent.launch("image/*")
         }
     }
 
-    fun getURLForResource(resourceId: Int): String? {
-        //use BuildConfig.APPLICATION_ID instead of R.class.getPackage().getName() if both are not same
-        return Uri.parse("android.resource://" + R::class.java.getPackage().name + "/" + resourceId)
-            .toString()
+    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        Log.d(TAG, "Uri is $uri")
+
+        val imagesRef: StorageReference = storageRef.child(uri!!.lastPathSegment.toString())
+        imagesRef.putFile(uri)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Image was successfully uploaded", Toast.LENGTH_LONG).show()
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Image FAILED to upload with message: ${exception.message}", Toast.LENGTH_LONG).show()
+            }
     }
 }

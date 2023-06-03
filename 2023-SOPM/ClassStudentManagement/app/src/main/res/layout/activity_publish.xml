@@ -41,19 +41,27 @@
         android:layout_margin="@dimen/edittext_margin" />
 
     <Button
-        android:id="@+id/add_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_image"
-        app:layout_constraintTop_toBottomOf="@+id/add_user_info"
-        android:layout_margin="@dimen/edittext_margin" />
-
-    <Button
         android:id="@+id/download_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/download_image"
-        app:layout_constraintTop_toBottomOf="@+id/add_image"
+        app:layout_constraintTop_toBottomOf="@+id/add_user_info"
         android:layout_margin="@dimen/edittext_margin" />
+
+    <Button
+        android:id="@+id/upload_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/upload_image"
+        app:layout_constraintTop_toBottomOf="@+id/download_image"
+        android:layout_margin="@dimen/edittext_margin" />
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/upload_image"
+        android:contentDescription="@string/downloaded_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
