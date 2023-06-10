@@ -11,4 +11,6 @@
     <string name="download_image">Download Image</string>
     <string name="upload_image">Upload Image</string>
     <string name="downloaded_image">Downloaded image</string>
+    <string name="number_of_allowed_posts">Number of allowed posts</string>
+    <integer name="default_value">500</integer>
 </resources>

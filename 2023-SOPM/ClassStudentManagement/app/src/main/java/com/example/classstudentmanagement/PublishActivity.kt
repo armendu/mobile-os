@@ -1,7 +1,5 @@
 package com.example.classstudentmanagement
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -13,14 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.classstudentmanagement.models.Course
 import com.example.classstudentmanagement.models.Student
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import java.io.File
-import java.io.FileInputStream
-
 
 class PublishActivity : AppCompatActivity() {
 
@@ -57,41 +52,61 @@ class PublishActivity : AppCompatActivity() {
         // Users Reference
         val usersReference = database.getReference("users")
 
-        usersReference.child(userId!!).get().addOnSuccessListener {
-            Log.i("PublishActivity", "Got value ${it.value}")
-        }.addOnFailureListener{
-            Log.e("PublishActivity", "Error getting data", it)
-        }
+        usersReference.child(userId!!).get()
+            .addOnSuccessListener {
+                Log.i("PublishActivity", "Got value ${it.value}")
+            }.addOnFailureListener {
+                Log.e("PublishActivity", "Error getting data", it)
+            }
 
         addButton.setOnClickListener {
-            val courseToAdd = Course(1, name.text.toString(), surname.text.toString(), "otherDesc")
-            val id = coursesReference.push().key
-            coursesReference.child(id!!).setValue(courseToAdd)
+            addNewCourse(name, surname, coursesReference)
         }
 
         addUserInfo.setOnClickListener {
-            val student = Student(1, "Name", "Surname", "Birthday")
-            usersReference.child(userId).setValue(student)
+            addNewStudent(usersReference, userId)
         }
 
         downloadImageButton.setOnClickListener {
-            storageRef.child("image:17").downloadUrl.addOnSuccessListener { uri ->
-                // Local temp file has been created
-                Log.d(TAG, "Download URL for that file is: $uri")
-
-                val imageView = findViewById<ImageView>(R.id.image_view)
-                Glide.with(this)
-                    .load(uri)
-                    .into(imageView)
-            }.addOnFailureListener { exception ->
-                // Handle any errors
-                Log.d(TAG, "Download URL for that file FAILED: ${exception.message}")
-            }
+            getImageFromStorage()
         }
 
         uploadImageButton.setOnClickListener {
             getContent.launch("image/*")
         }
+    }
+
+    private fun getImageFromStorage() {
+        storageRef.child("image:17").downloadUrl.addOnSuccessListener { uri ->
+            // Local temp file has been created
+            Log.d(TAG, "Download URL for that file is: $uri")
+
+            val imageView = findViewById<ImageView>(R.id.image_view)
+            Glide.with(this)
+                .load(uri)
+                .into(imageView)
+        }.addOnFailureListener { exception ->
+            // Handle any errors
+            Log.d(TAG, "Download URL for that file FAILED: ${exception.message}")
+        }
+    }
+
+    private fun addNewStudent(
+        usersReference: DatabaseReference,
+        userId: String?
+    ) {
+        val student = Student(1, "Name", "Surname", "Birthday")
+        usersReference.child(userId!!).setValue(student)
+    }
+
+    private fun addNewCourse(
+        name: EditText,
+        surname: EditText,
+        coursesReference: DatabaseReference
+    ) {
+        val courseToAdd = Course(1, name.text.toString(), surname.text.toString(), "otherDesc")
+        val id = coursesReference.push().key
+        coursesReference.child(id!!).setValue(courseToAdd)
     }
 
     private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->

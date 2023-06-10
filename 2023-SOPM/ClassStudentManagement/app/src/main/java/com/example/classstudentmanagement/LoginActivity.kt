@@ -7,6 +7,8 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -37,21 +39,22 @@ class LoginActivity : AppCompatActivity() {
             }
             auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                 .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        showLongToastWithMessage("Logged in successfully. Hello ${auth.currentUser?.email}")
-                        val intent = Intent(this, PostsActivity::class.java)
-                        intent.putExtra("USERNAME", email.text.toString())
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        showLongToastWithMessage("Authentication failed: ${task.exception}")
-                    }
+                    handleAuthenticationTaskCompleted(task)
                 }
         }
 
         val registerButton = findViewById<Button>(R.id.register_button)
         registerButton.setOnClickListener {
             createUserWith(email, password)
+        }
+    }
+
+    private fun handleAuthenticationTaskCompleted(task: Task<AuthResult>) {
+        if (task.isSuccessful) {
+            showLongToastWithMessage("Logged in successfully. Hello ${auth.currentUser?.email}")
+            moveToNextActivity()
+        } else {
+            showLongToastWithMessage("Authentication failed: ${task.exception}")
         }
     }
 
@@ -89,13 +92,16 @@ class LoginActivity : AppCompatActivity() {
         if (currentUser != null) {
             Log.d(TAG, "onStart: Current user is: ${currentUser.email}")
             showLongToastWithMessage("Logged in successfully. Hello ${currentUser.email}")
-            val intent = Intent(this, PostsActivity::class.java)
-            intent.putExtra("ID", currentUser.uid.toString())
-            startActivity(intent)
-            finish()
+            moveToNextActivity()
         } else {
             Log.d(TAG, "onStart: User is not logged in")
         }
+    }
+
+    private fun moveToNextActivity() {
+        val intent = Intent(this, PostsActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     override fun onResume() {

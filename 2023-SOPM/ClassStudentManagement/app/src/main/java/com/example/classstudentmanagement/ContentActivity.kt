@@ -23,6 +23,7 @@ class ContentActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "ContentActivity"
+        private var latestId = 5 // TODO: Don't use hard-coded number of Primary Keys
     }
 
     private val studentViewModel: StudentViewModel by viewModels {
@@ -36,9 +37,20 @@ class ContentActivity : AppCompatActivity() {
         val mainActivityIntent = intent
 
         val username = mainActivityIntent.getStringExtra("USERNAME")
-        Log.d("ContentActivity", "Username is ${username.toString()}")
+        Log.d(TAG, "Username is ${username.toString()}")
 
-        // val coursesList = DataSource().getCourses()
+        val recyclerView = createRecyclerView()
+
+        // FAB onClick to add to DB
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        fab.setOnClickListener {
+            addNewStudentBasedOnLatestId()
+        }
+
+        callServiceToGetCoursesData(recyclerView!!)
+    }
+
+    private fun createRecyclerView(): RecyclerView? {
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         val studentAdapter = StudentAdapter()
         recyclerView.adapter = studentAdapter
@@ -49,24 +61,19 @@ class ContentActivity : AppCompatActivity() {
                 Log.d(TAG, "STUDENT Name $it")
             }
         })
+        return recyclerView
+    }
 
-        var latestId = 5
-
-        // FAB onClick to add to DB
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        fab.setOnClickListener {
-            latestId += 1
-            val studentToAdd =
-                Student(
-                    latestId,
-                    "Name$latestId",
-                    "surname$latestId",
-                    ""
-                )
-            studentViewModel.insert(studentToAdd)
-        }
-
-        callServiceToGetCoursesData(recyclerView)
+    private fun addNewStudentBasedOnLatestId() {
+        latestId += 1
+        val studentToAdd =
+            Student(
+                latestId,
+                "Name$latestId",
+                "surname$latestId",
+                ""
+            )
+        studentViewModel.insert(studentToAdd)
     }
 
     private fun callServiceToGetCoursesData(recyclerView: RecyclerView) {
