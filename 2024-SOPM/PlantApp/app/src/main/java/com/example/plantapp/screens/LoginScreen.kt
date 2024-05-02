@@ -15,8 +15,10 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -25,12 +27,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.plantapp.Routes
+import com.example.plantapp.data.AppDatabase
+import com.example.plantapp.data.OfflinePlantsRepository
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navigationController: NavController) {
 
     val username = remember { mutableStateOf(TextFieldValue()) }
     val password = remember { mutableStateOf(TextFieldValue()) }
+
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -67,7 +75,13 @@ fun LoginScreen(navigationController: NavController) {
 
         // TODO: Explain Logging and how to use the text field data
         Button(
-            onClick = { navigationController.navigate(Routes.Content.routeName) },
+//            onClick = { navigationController.navigate(Routes.Content.routeName) },
+            onClick = {
+                coroutineScope.launch {
+                    val repo = AppDatabase.getDatabase(context.applicationContext).plantsDao()
+                    repo.insert(com.example.plantapp.data.Plant(1, "Sample Plant Name", "Sample"))
+                }
+            },
             shape = RoundedCornerShape(10.dp)
         ) {
             Text(text = "Login")
