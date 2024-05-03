@@ -75,13 +75,13 @@ fun LoginScreen(navigationController: NavController) {
 
         // TODO: Explain Logging and how to use the text field data
         Button(
-//            onClick = { navigationController.navigate(Routes.Content.routeName) },
-            onClick = {
-                coroutineScope.launch {
-                    val repo = AppDatabase.getDatabase(context.applicationContext).plantsDao()
-                    repo.insert(com.example.plantapp.data.Plant(1, "Sample Plant Name", "Sample"))
-                }
-            },
+            onClick = { navigationController.navigate(Routes.Content.routeName) },
+//            onClick = {
+//                coroutineScope.launch {
+//                    val repo = AppDatabase.getDatabase(context.applicationContext).plantsDao()
+//                    repo.insert(com.example.plantapp.data.Plant(1, "Sample Plant Name", "Sample"))
+//                }
+//            },
             shape = RoundedCornerShape(10.dp)
         ) {
             Text(text = "Login")

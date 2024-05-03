@@ -4,21 +4,34 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.plantapp.ViewModelProvider
+import com.example.plantapp.items.ContentViewModel
+//import com.example.plantapp.items.PlantViewModel
 
 @Composable
-fun ContentScreen(modifier: Modifier = Modifier, plantNames: List<String> = listOf("Bamboo", "Cactus", "Orchid")) {
-    Column(modifier = modifier.padding(vertical = 10.dp, horizontal = 10.dp)) {
-        for (name in plantNames) {
-            Plant(name)
+fun ContentScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ContentViewModel = viewModel(factory = ViewModelProvider.Factory)
+) {
+    val state by viewModel.contentUiState.collectAsState()
+
+    LazyColumn(modifier = modifier.padding(vertical = 10.dp, horizontal = 10.dp)) {
+        items(items = state.itemList, key = { it.uid }) {
+            plant -> Plant(plant.name)
         }
     }
 }
