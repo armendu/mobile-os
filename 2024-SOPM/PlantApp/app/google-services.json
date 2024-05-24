@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "282863873852",
+    "project_id": "plantapp-7c0bc",
+    "storage_bucket": "plantapp-7c0bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282863873852:android:18071be5e148a42e087839",
+        "android_client_info": {
+          "package_name": "com.example.plantapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1Hu6OfF4Z0UCNQjyUqzycO1x2b4pfiko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

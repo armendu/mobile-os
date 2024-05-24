@@ -13,9 +13,7 @@ class OfflinePlantsRepository(private val plantsDao: PlantsDao) : PlantsReposito
         TODO("Not yet implemented")
     }
 
-    override fun getAll(): Flow<List<Plant>> {
-        TODO("Not yet implemented")
-    }
+    override fun getAll(): Flow<List<Plant>> = plantsDao.getAll()
 
     override suspend fun insert(plant: Plant) = plantsDao.insert(plant)
 }

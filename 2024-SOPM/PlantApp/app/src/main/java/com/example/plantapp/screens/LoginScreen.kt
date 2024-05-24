@@ -1,5 +1,7 @@
 package com.example.plantapp.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,13 +31,16 @@ import androidx.navigation.NavController
 import com.example.plantapp.Routes
 import com.example.plantapp.data.AppDatabase
 import com.example.plantapp.data.OfflinePlantsRepository
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navigationController: NavController) {
 
-    val username = remember { mutableStateOf(TextFieldValue()) }
-    val password = remember { mutableStateOf(TextFieldValue()) }
+    val username = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -76,11 +81,31 @@ fun LoginScreen(navigationController: NavController) {
         // TODO: Explain Logging and how to use the text field data
         Button(
 //            onClick = { navigationController.navigate(Routes.Content.routeName) },
+//            onClick = {
+//                coroutineScope.launch {
+//                    val repo = AppDatabase.getDatabase(context.applicationContext).plantsDao()
+//                    repo.insert(com.example.plantapp.data.Plant(2, "Sample Plant Name 2", "Sample 2"))
+//                }
+//            },
             onClick = {
-                coroutineScope.launch {
-                    val repo = AppDatabase.getDatabase(context.applicationContext).plantsDao()
-                    repo.insert(com.example.plantapp.data.Plant(1, "Sample Plant Name", "Sample"))
-                }
+                val auth: FirebaseAuth = Firebase.auth
+                auth.createUserWithEmailAndPassword(
+                    username.value.toString(),
+                    password.value.toString()
+                )
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("LoginScreen", "createUserWithEmail:success")
+                            val user = auth.currentUser
+                            Log.d("LoginScreen", "${user?.uid}")
+                        } else {
+                            Log.w("LoginScreen", "${username.value} + ${password.value}")
+
+                            // If sign in fails, display a message to the user.
+                            Log.w("LoginScreen", "createUserWithEmail:failure", task.exception)
+                        }
+                    }
             },
             shape = RoundedCornerShape(10.dp)
         ) {
