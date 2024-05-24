@@ -1,4 +1,4 @@
-package com.example.plantapp.screens
+package com.example.plantapp.screens.login
 
 import android.util.Log
 import android.widget.Toast
@@ -24,17 +24,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.plantapp.Routes
-import com.example.plantapp.data.AppDatabase
-import com.example.plantapp.data.OfflinePlantsRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navigationController: NavController) {
@@ -44,6 +41,31 @@ fun LoginScreen(navigationController: NavController) {
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+
+    // TODO: Remove this and move them to the ViewModel
+    val db = Firebase.firestore
+    db.collection("plants")
+        .get()
+        .addOnSuccessListener { result ->
+            for (plant in result) {
+                Log.d("LoginScreen", "${plant.id} => ${plant.data}")
+            }
+        }
+        .addOnFailureListener {exception ->
+            Log.w("LoginScreen", "Error getting documents.", exception)
+        }
+    val plant = hashMapOf(
+        "Origin" to "UNKNOWN",
+        "plantDescription" to "Empty desc",
+        "plantName" to "Plant2",
+        "Color" to arrayListOf(""),
+    )
+
+    db.collection("plants")
+        .add(plant)
+        .addOnSuccessListener { doc ->
+            Log.d("LoginScreen", "DocumentSnapshot added with ID: ${doc.id}")
+        }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -89,21 +111,13 @@ fun LoginScreen(navigationController: NavController) {
 //            },
             onClick = {
                 val auth: FirebaseAuth = Firebase.auth
-                auth.createUserWithEmailAndPassword(
-                    username.value.toString(),
-                    password.value.toString()
-                )
+                auth.signInWithEmailAndPassword(username.value, password.value)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("LoginScreen", "createUserWithEmail:success")
-                            val user = auth.currentUser
-                            Log.d("LoginScreen", "${user?.uid}")
-                        } else {
-                            Log.w("LoginScreen", "${username.value} + ${password.value}")
-
-                            // If sign in fails, display a message to the user.
-                            Log.w("LoginScreen", "createUserWithEmail:failure", task.exception)
+                            navigationController.navigate(Routes.Content.routeName)
+                        }
+                        else {
+                            Log.d("LoginScreen", "Failed to login with ${username.value} & ${password.value}")
                         }
                     }
             },
