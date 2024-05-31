@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.plantapp.ViewModelProvider
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun ContentScreen(
@@ -29,11 +30,21 @@ fun ContentScreen(
 ) {
     val state by viewModel.contentUiState.collectAsState()
 
+    viewModel.logApiData()
+
     LazyColumn(modifier = modifier.padding(vertical = 10.dp, horizontal = 10.dp)) {
         items(items = state.plantsList, key = { it.uid }) {
             it -> Plant(it.name)
         }
     }
+//    val state by viewModel.contentUiState.collectAsState()
+//    val plantsList by viewModel.plantsFromStorageService.collectAsState(initial = listOf())
+//
+//    LazyColumn(modifier = modifier.padding(vertical = 10.dp, horizontal = 10.dp)) {
+//        items(items = plantsList, key = { it.uid }) {
+//            it -> Plant(it.name)
+//        }
+//    }
 }
 
 @Composable

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.plantapp.Routes
+import com.example.plantapp.services.StorageService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -43,29 +44,7 @@ fun LoginScreen(navigationController: NavController) {
     val coroutineScope = rememberCoroutineScope()
 
     // TODO: Remove this and move them to the ViewModel
-    val db = Firebase.firestore
-    db.collection("plants")
-        .get()
-        .addOnSuccessListener { result ->
-            for (plant in result) {
-                Log.d("LoginScreen", "${plant.id} => ${plant.data}")
-            }
-        }
-        .addOnFailureListener {exception ->
-            Log.w("LoginScreen", "Error getting documents.", exception)
-        }
-    val plant = hashMapOf(
-        "Origin" to "UNKNOWN",
-        "plantDescription" to "Empty desc",
-        "plantName" to "Plant2",
-        "Color" to arrayListOf(""),
-    )
-
-    db.collection("plants")
-        .add(plant)
-        .addOnSuccessListener { doc ->
-            Log.d("LoginScreen", "DocumentSnapshot added with ID: ${doc.id}")
-        }
+    val storageService = StorageService()
 
     Column(
         modifier = Modifier.fillMaxSize(),
